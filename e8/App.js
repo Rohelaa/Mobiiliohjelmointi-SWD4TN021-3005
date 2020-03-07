@@ -5,6 +5,7 @@ export default function App() {
   const [amount, setAmount] = useState('')
   const [currency, setCurrency] = useState('')
   const [currencyRates, setCurrencyRates] = useState({})
+  const [amountInEuros, setAmountInEuros] = useState('')
 
 
   const getCurrencyRates = () => {
@@ -24,32 +25,33 @@ export default function App() {
     getCurrencyRates()
   }, [])
   
-
-  const pickerItemsInArray = Object.keys(currencyRates).map(currencyCode => {
-    <Picker.Item label={currencyCode} value={currencyCode} />
-  })
-
-  const pickerItems = pickerItemsInArray.forEach
   return (
     <View style={styles.container}>
+      <Text>{amountInEuros.toFixed(2)}</Text>
       <TextInput 
         style={styles.TextInput} 
         onChangeText={amount => setAmount(amount)}
       />
       <Picker
         selectedValue={currency}
-        style={{height: 50, width: 100}}
-        onValueChange={(itemValue, itemIndex) => {
-          setCurrency(itemValue)
+        style={{ height: 50, width: 100 }}
+        onValueChange={currency => {
+          setCurrency(currency)
+          console.log(currency)
+          console.log(currencyRates[currency])
         }}
       >
-        
-        <Picker.Item label="GBP" value="GBP" />
-        <Picker.Item label="AED" value="AED" />
+        {/* mapin callback-funktio saa kaksi parametria, koska Picker.Item -komponentit vaativat
+        key-attribuutille arvon */}
+
+        {Object.keys(currencyRates).map((currencyCode, index) => {
+          return (<Picker.Item label={currencyCode} value={currencyCode} key={index} />)
+        })}
+
       </Picker>
       <Button
-        title="convert" 
-        onPress={getCurrencyRates}
+        title="convert"
+        onPress={() => setAmountInEuros(amount / currencyRates[currency])}
       />
     </View>
   )
