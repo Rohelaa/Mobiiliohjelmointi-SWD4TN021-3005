@@ -38,6 +38,20 @@ export default function HomeScreen ({ navigation }) {
     })
   }
 
+  const deleteItem = (id) => {
+    db.transaction(tx => {
+      tx.executeSql('delete from location where id = ?;', [id])
+    }, null, updateList)
+  }
+
+  // const renderAdress = ({ item }) => {
+  //   return (
+  //     <ListItem
+  //       title={item.id}
+  //     />
+  //   )
+  // }
+
   return (
     <View style={styles.container}>
       <Input 
@@ -72,8 +86,13 @@ export default function HomeScreen ({ navigation }) {
               onPress={() => navigation.navigate('Map', {
                 address: item.address
               })}
+              onLongPress={() => deleteItem(item.id)}
             />
-          )}
+            // <ListItem 
+            //   subtitle={item.ad}
+            // />
+          )
+        }
         />
       </View>
       
